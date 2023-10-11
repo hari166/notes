@@ -1,0 +1,26 @@
+
+<header class="z-20 fixed w-[90%] md:w-[97.5%] shadow-xl top-4 left-[50%] translate-x-[-50%] bg-base-s dark:bg-dark-s rounded-3xl border-2 border-gray-400 dark:border-gray-700 h-20 px-5">
+    <nav class="w-full h-full max-w-7xl m-auto flex justify-between items-center">
+        <p class="text-3xl font-bold">Notes</p>
+        <div class="flex items-center gap-5">
+            <div class="w-24 h-11 flex items-center justify-center">
+                <div *ngIf="(auth.isLoading$ | async) || loading(); else loaded">
+                    <app-spinner></app-spinner>
+                </div>
+                <ng-template #loaded>
+                    <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+                        <button class="rounded-3xl bg-slate-100 dark:bg-slate-900 font-bold w-full h-full" (click)="logout()">
+                        Log out
+                        </button>
+                    </ng-container>
+                </ng-template>
+                <ng-template #loggedOut>
+                    <button class="rounded-3xl bg-slate-100 dark:bg-slate-900 font-bold w-full h-full" *ngIf="(auth.isAuthenticated$ | async) == false" (click)="loginWithRedirect()">
+                        Log In
+                    </button>
+                </ng-template>
+            </div>
+            <button (click)="darkmode.set(!darkmode())"><img class="w-12 bg-slate-100 dark:bg-slate-900 rounded-full p-2" src="../../../assets/{{darkmode()?'light.svg':'dark.svg'}}"/></button>
+        </div>
+    </nav>
+</header>

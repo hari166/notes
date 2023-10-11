@@ -1,0 +1,40 @@
+
+<div class="darkmode() h-screen bg-base-p text-font-base dark:bg-dark-p dark:text-font-dark">
+    <app-header [darkmode]="darkmode"></app-header>
+    <div *ngIf="isWsLoaded(); else loading" class="h-full w-full grid items-center">
+        <div *ngIf="isLoggedIn();else signin" class="pt-20 grid-cols-1 grid md:grid-cols-[minmax(15rem,1fr),minmax(0,4fr)]">
+            <app-sidebar *ngIf="winWidth() > 768; else sm" class="z-10 ml-4 mt-9 h-fit" [workspaces]="this.getWs()"></app-sidebar>
+            <ng-template #sm>
+                <div (click)="openSideBar()" class="{{sideBarActive()?'w-14':'w-32'}} z-40 py-1 flex justify-center transition-all duration-300 fixed bottom-10 left-[50%] translate-x-[-50%] shadow-xl bg-base-s dark:bg-dark-s border-2 rounded-3xl border-gray-400 dark:border-gray-700">
+                    <div *ngIf="!sideBarActive(); else close">Workspaces</div>
+                    <ng-template #close>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </ng-template>
+                </div>
+                <div *ngIf="sideBarActive()">
+                    <app-sidebar class="fixed top-0 z-30 w-full h-full" [workspaces]="this.getWs()"></app-sidebar>
+                </div>
+            </ng-template>
+            <div (wheel)="scrollH($event)" class="h-[calc(100vh-5rem)] {{sideBarActive()?'overflow-hidden':''}} md:ml-[-1rem]">
+                <div #scrollContainer class="py-10 px-5 md:p-10 flex flex-col md:grid md:auto-cols-[calc((36vh-5.5rem)*1.3)] md:grid-flow-col md:grid-rows-2 gap-y-7 gap-x-16 w-full md:overflow-x-auto no-scrollbar">
+                    <app-card *ngFor="let note of this.getWs()[this.getCurWsId()].notes" [note]="note"></app-card>
+                    <div (click)="addNote()" class="cursor-pointer bg-base-s dark:bg-dark-s h-full aspect-square rounded-3xl font-bold flex justify-center items-center text-[10rem]">
+                        <svg class="w-20 h-20 m-auto stroke-slate-500 opacity-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #signin>
+            <div class="text-3xl font-bold w-full text-center opacity-25 p-5">Log in to access your notes</div>
+        </ng-template>
+    </div>
+    <ng-template #loading>
+        <div class="w-full h-[calc(100%-5rem)] flex items-center justify-center m-auto"><app-spinner></app-spinner></div>
+    </ng-template>
+</div>
+
+
